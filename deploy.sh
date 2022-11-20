@@ -8,8 +8,8 @@ cd dist
 
 git init
 
-git add -A
+git add .
 git commit -m 'New deployment'
-git push -f git@github.com:vigandika/wc-predictor.git master:gh-pages
+git push -f git@github.com:vigandika/wc-predictor.git develop:gh-pages
 
 cd -
