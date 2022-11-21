@@ -1,30 +1,79 @@
 <template>
   <v-container>
-    <v-btn @click="date.subtract(1, 'days'); loadData();"> yesterday </v-btn>
+    <v-btn plain
+      @click="
+        date.subtract(1, 'days');
+        loadData();
+      "
+    >
+      yesterday
+    </v-btn>
+    &nbsp;
     <span class="pa-2"> {{ date.format("DD-MM-YYYY") }}</span>
-    <v-btn @click="date.add(1, 'days'); loadData();"> tomorrow </v-btn>
+    &nbsp;
+    <v-btn plain
+      @click="
+        date.add(1, 'days');
+        loadData();
+      "
+    >
+      tomorrow
+    </v-btn>
     <v-list>
       <v-list-item
         v-for="match in matches"
         :key="`${match.homeTeam}${match.awayTeam}`"
       >
         <v-list-item-content>
-          <v-card>
-            <v-row no-gutters>
-              <v-col
-                v-for="str in [match.homeTeam, 'vs', match.awayTeam]"
-                :key="str"
-                sm="4"
-                align-self="center"
-              >
-                <v-card class="pa-2" outlined tile>
-                  <v-card-text class="team-text">
-                    <p class="text-h1 text--primary">{{ str }}</p>
+          <!-- <v-card> -->
+          <v-row style="flex-wrap: nowrap">
+            <v-col sm="5">
+              <v-card class="ht-card" outlined width="110px">
+                <v-container fill-height class="padding: 12px 0px 0px 0px;">
+                  <v-card-text class="team-text pa-0">
+                    {{ match.homeTeam }}
                   </v-card-text>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-card>
+                </v-container>
+              </v-card>
+            </v-col>
+            <v-col sm="2" style="display:inline-flex; justify-content:center;padding: 12px 0px 0px 0px;" width="40px">
+              <span>
+                <v-text-field
+                  v-model="match.homeTeamScore"
+                  hide-details
+                  filled
+                  dense
+                  single-line
+                  class="shrink"
+                  style="width: 40px; padding: 0px"
+                >
+                </v-text-field>
+              </span>
+                <p>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;</p>
+              <span>
+                <v-text-field
+                  v-model="match.awayTeamScore"
+                  hide-details
+                  filled
+                  dense
+                  single-line
+                  class="shrink"
+                  style="width: 40px; padding: 0px"
+                >
+                </v-text-field>
+              </span>
+            </v-col>
+            <v-col sm="5">
+              <v-card class="at-card" outlined tile width="110px">
+                <v-container fill-height class="padding: 12px 0px 0px 0px;">
+                  <v-card-text class="team-text pa-0">
+                    {{ match.awayTeam }}
+                  </v-card-text>
+                </v-container>
+              </v-card>
+            </v-col>
+          </v-row>
+          <!-- </v-card> -->
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -51,9 +100,7 @@ export default class Predictor extends Vue {
     this.matches = [];
     this.axios
       .get(
-        `https://www.fotmob.com/api/matches?timezone=Europe/Tirane&countryCode=AL&ccode3=ALB&date=${this.date.format(
-          "YYYYMMDD"
-        )}&sortOnClient=true`
+        `138.68.109.195:8080/api/matches?date=20221121${this.date.format("YYYYMMDD")}`,
       )
       .then((response) => {
         console.log(response);
@@ -65,6 +112,9 @@ export default class Predictor extends Vue {
             this.matches.push(new Match(match.home.name, match.away.name));
           });
         });
+      })
+      .catch((error: any) => {
+        alert(JSON.stringify(error));
       });
   }
 }
@@ -73,6 +123,20 @@ export default class Predictor extends Vue {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .team-text {
-  font-size: 20px;
+  font-size: 15px;
+  padding: 0px;
+}
+
+.ht-card {
+  float: right;
+}
+
+.at-card {
+  float: left;
+}
+
+.ht-card,
+.at-card {
+  border: 0px;
 }
 </style>
