@@ -1,5 +1,20 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <Rankings />
   </div>
 </template>
+
+
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import Rankings from '@/components/Rankings.vue'; // @ is an alias to /src
+
+@Component({
+  components: {
+    Rankings,
+  },
+})
+export default class About extends Vue {
+
+}
+</script>

@@ -1,6 +1,7 @@
 <template>
   <v-container>
-    <v-btn plain
+    <v-btn
+      plain
       @click="
         date.subtract(1, 'days');
         loadData();
@@ -11,7 +12,8 @@
     &nbsp;
     <span class="pa-2"> {{ date.format("DD-MM-YYYY") }}</span>
     &nbsp;
-    <v-btn plain
+    <v-btn
+      plain
       @click="
         date.add(1, 'days');
         loadData();
@@ -25,7 +27,9 @@
         :key="`${match.homeTeam}${match.awayTeam}`"
       >
         <v-list-item-content>
-          <!-- <v-card> -->
+          <span v-if="match.started" style="color: red; font-size: 12px">
+            This match has already started
+          </span>
           <v-row style="flex-wrap: nowrap">
             <v-col sm="5">
               <v-card class="ht-card" outlined width="110px">
@@ -36,27 +40,43 @@
                 </v-container>
               </v-card>
             </v-col>
-            <v-col sm="2" style="display:inline-flex; justify-content:center;padding: 12px 0px 0px 0px;" width="40px">
+            <v-col
+              sm="2"
+              style="
+                display: inline-flex;
+                justify-content: center;
+                padding: 12px 0px 0px 0px;
+              "
+              width="40px"
+            >
               <span>
                 <v-text-field
-                  v-model="match.homeTeamScore"
+                  v-model="match.predHomeTeamScore"
                   hide-details
                   filled
                   dense
                   single-line
+                  :disabled="match.started"
+                  :placeholder="
+                    match.started ? match.homeTeamScore.toString() : ''
+                  "
                   class="shrink"
                   style="width: 40px; padding: 0px"
                 >
                 </v-text-field>
               </span>
-                <p>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;</p>
+              <p>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;</p>
               <span>
                 <v-text-field
-                  v-model="match.awayTeamScore"
+                  v-model="match.predAwayTeamScore"
                   hide-details
                   filled
                   dense
                   single-line
+                  :disabled="match.started"
+                  :placeholder="
+                    match.started ? match.awayTeamScore.toString() : ''
+                  "
                   class="shrink"
                   style="width: 40px; padding: 0px"
                 >
@@ -73,15 +93,22 @@
               </v-card>
             </v-col>
           </v-row>
-          <!-- </v-card> -->
         </v-list-item-content>
       </v-list-item>
     </v-list>
+    <v-btn
+      plain
+      right
+      style="background-color: #18a558; color: white"
+      @click="savePrediction"
+    >
+      SAVE
+    </v-btn>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import { Match } from "@/models/Match";
 import axios from "axios";
 import moment from "moment";
@@ -100,7 +127,8 @@ export default class Predictor extends Vue {
     this.matches = [];
     this.axios
       .get(
-        `138.68.109.195:8080/api/matches?date=20221121${this.date.format("YYYYMMDD")}`,
+        // `http://138.68.109.195:8080/api/matches?date=${this.date.format("YYYYMMDD")}`,
+        `https://fotmob.com/api/matches?date=${this.date.format("YYYYMMDD")}`
       )
       .then((response) => {
         console.log(response);
@@ -109,13 +137,34 @@ export default class Predictor extends Vue {
         );
         worldCupData.forEach((l: any) => {
           l.matches.forEach((match: any) => {
-            this.matches.push(new Match(match.home.name, match.away.name));
+            this.matches.push(
+              new Match(
+                match.home.name,
+                match.away.name,
+                match.status.started,
+                match.home.score,
+                match.away.score
+              )
+            );
           });
         });
       })
       .catch((error: any) => {
         alert(JSON.stringify(error));
       });
+  }
+
+  private savePrediction() {
+    let bodyJson: any = [];
+    this.matches.forEach((match) =>
+      bodyJson.push({
+        match: `${match.homeTeam}${match.awayTeam}`,
+        user: `vigan`,
+        predictedHomeScore: Number(match.predHomeTeamScore),
+        predictedAwayScore: Number(match.predAwayTeamScore),
+      })
+    );
+    console.log(JSON.stringify(bodyJson));
   }
 }
 </script>
