@@ -177,7 +177,7 @@ export default class Predictor extends Vue {
         predictedAwayScore: Number(match.predAwayTeamScore),
       })
     );
-    console.log(JSON.stringify(bodyJson));
+    this.matches = [];
   }
 
   private updateMatches() {
