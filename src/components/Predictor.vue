@@ -103,8 +103,8 @@ export default class Predictor extends Vue {
     this.matches = [];
     this.axios
       .get(
-        `https://fotmob.com/api/matches?date=${this.date.format("YYYYMMDD")}`,
-        // `https://wcpredictor.fun/api/matches?date=${this.date.format("YYYYMMDD")}`
+        // `https://fotmob.com/api/matches?date=${this.date.format("YYYYMMDD")}`,
+        `https://wcpredictor.fun/api/matches?date=${this.date.format("YYYYMMDD")}`
       )
       .then((response) => {
         console.log(response);
