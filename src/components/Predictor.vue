@@ -31,7 +31,7 @@
             This match has already started
           </span>
           <v-row style="flex-wrap: nowrap">
-            <v-col sm="5">
+            <v-col sm="5" style="padding: 12px 0px 0px 0px;">
               <v-card class="ht-card" outlined width="110px">
                 <v-container fill-height class="padding: 12px 0px 0px 0px;">
                   <v-card-text class="team-text pa-0">
@@ -83,7 +83,7 @@
                 </v-text-field>
               </span>
             </v-col>
-            <v-col sm="5">
+            <v-col sm="5" style="padding: 12px 0px 0px 0px;">
               <v-card class="at-card" outlined tile width="110px">
                 <v-container fill-height class="padding: 12px 0px 0px 0px;">
                   <v-card-text class="team-text pa-0">
@@ -104,6 +104,17 @@
     >
       SAVE
     </v-btn>
+    <div style="padding: 10px">
+    <v-btn
+      v-if="username === 'vigan'"
+      plain
+      right
+      style="background-color: red; color: white"
+      @click="updateMatches"
+    >
+      Admin update matches
+    </v-btn>
+    </div>
   </v-container>
 </template>
 
@@ -112,12 +123,14 @@ import { Component, Vue } from "vue-property-decorator";
 import { Match } from "@/models/Match";
 import axios from "axios";
 import moment from "moment";
+import store from '@/store/index';
 
 @Component
 export default class Predictor extends Vue {
   private axios = axios.create({});
   private matches: Array<Match> = [];
   private date = moment();
+  private username = store.state.username;
 
   mounted() {
     this.loadData();
@@ -127,8 +140,8 @@ export default class Predictor extends Vue {
     this.matches = [];
     this.axios
       .get(
-        // `http://138.68.109.195:8080/api/matches?date=${this.date.format("YYYYMMDD")}`,
-        `https://fotmob.com/api/matches?date=${this.date.format("YYYYMMDD")}`
+        `https://wcpredictor.fun/api/matches?date=${this.date.format("YYYYMMDD")}`
+        // `https://fotmob.com/api/matches?date=${this.date.format("YYYYMMDD")}`
       )
       .then((response) => {
         console.log(response);
@@ -159,9 +172,23 @@ export default class Predictor extends Vue {
     this.matches.forEach((match) =>
       bodyJson.push({
         match: `${match.homeTeam}${match.awayTeam}`,
-        user: `vigan`,
+        user: this.$store.state.username,
         predictedHomeScore: Number(match.predHomeTeamScore),
         predictedAwayScore: Number(match.predAwayTeamScore),
+      })
+    );
+    this.matches = [];
+  }
+
+  private updateMatches() {
+    let bodyJson: any = [];
+    this.matches.forEach((match) =>
+      bodyJson.push({
+        match: `${match.homeTeam}${match.awayTeam}`,
+        homeTeam: match.homeTeam,
+        awayTeam: match.awayTeam,
+        homeScore: match.homeTeamScore,
+        awayScore: match.awayTeamScore,
       })
     );
     console.log(JSON.stringify(bodyJson));

@@ -10,7 +10,7 @@
       <router-link to="/about">Rankings</router-link> |
       <router-link to="/history">History</router-link>
     </div>
-    <router-view/>
+    <router-view v-if="!isAlertVisible" />
   </div>
 </template>
 
