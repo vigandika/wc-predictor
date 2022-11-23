@@ -103,9 +103,8 @@ export default class Predictor extends Vue {
     this.matches = [];
     this.axios
       .get(
-        // `http://138.68.109.195:8080/api/matches?date=${this.date.format("YYYYMMDD")}`,
-        // `https://fotmob.com/api/matches?date=${this.date.format("YYYYMMDD")}`,
-        `https://wcpredictor.fun/api/matches?date=${this.date.format("YYYYMMDD")}`
+        `https://fotmob.com/api/matches?date=${this.date.format("YYYYMMDD")}`,
+        // `https://wcpredictor.fun/api/matches?date=${this.date.format("YYYYMMDD")}`
       )
       .then((response) => {
         console.log(response);
@@ -135,9 +134,7 @@ export default class Predictor extends Vue {
     });
 
     this.axios
-      .post(`https://wcpredictor.fun/api/predict`, {
-        predictions: bodyJson,
-      })
+      .post(`https://wcpredictor.fun/api/predict`, bodyJson)
       .then(function (response) {
         console.log(response);
       })
