@@ -142,14 +142,13 @@ export default class Predictor extends Vue {
 
     this.axios
       .post(`https://wcpredictor.fun/api/predict`, bodyJson)
-      .then(function (response) {
+      .then((response) => {
         console.log(response);
+        this.matches = [];
       })
       .catch(function (error) {
         console.log(error);
       });
-
-    this.matches = [];
   }
 
   private updateMatches() {
