@@ -22,14 +22,9 @@
       tomorrow
     </v-btn>
     <v-list>
-      <v-list-item
-        v-for="match in matches"
-        :key="`${match.homeTeam}${match.awayTeam}`"
-      >
+      <v-list-item v-for="match in matches" :key="`${match.homeTeam}${match.awayTeam}`">
         <v-list-item-content>
-          <span v-if="match.started" style="color: red; font-size: 12px">
-            This match has already started
-          </span>
+          <span v-if="match.started" style="color: red; font-size: 12px"> This match has already started </span>
           <v-row style="flex-wrap: nowrap">
             <v-col sm="5">
               <v-card class="ht-card" outlined width="110px">
@@ -40,15 +35,7 @@
                 </v-container>
               </v-card>
             </v-col>
-            <v-col
-              sm="2"
-              style="
-                display: inline-flex;
-                justify-content: center;
-                padding: 12px 0px 0px 0px;
-              "
-              width="40px"
-            >
+            <v-col sm="2" style="display: inline-flex; justify-content: center; padding: 12px 0px 0px 0px" width="40px">
               <span>
                 <v-text-field
                   v-model="match.predHomeTeamScore"
@@ -57,9 +44,7 @@
                   dense
                   single-line
                   :disabled="match.started"
-                  :placeholder="
-                    match.started ? match.homeTeamScore.toString() : ''
-                  "
+                  :placeholder="match.started ? match.homeTeamScore.toString() : ''"
                   class="shrink"
                   style="width: 40px; padding: 0px"
                 >
@@ -74,9 +59,7 @@
                   dense
                   single-line
                   :disabled="match.started"
-                  :placeholder="
-                    match.started ? match.awayTeamScore.toString() : ''
-                  "
+                  :placeholder="match.started ? match.awayTeamScore.toString() : ''"
                   class="shrink"
                   style="width: 40px; padding: 0px"
                 >
@@ -96,14 +79,7 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
-    <v-btn
-      plain
-      right
-      style="background-color: #18a558; color: white"
-      @click="savePrediction"
-    >
-      SAVE
-    </v-btn>
+    <v-btn plain right style="background-color: #18a558; color: white" @click="savePrediction"> SAVE </v-btn>
   </v-container>
 </template>
 
@@ -128,24 +104,15 @@ export default class Predictor extends Vue {
     this.axios
       .get(
         // `http://138.68.109.195:8080/api/matches?date=${this.date.format("YYYYMMDD")}`,
-        `https://fotmob.com/api/matches?date=${this.date.format("YYYYMMDD")}`
+        // `https://fotmob.com/api/matches?date=${this.date.format("YYYYMMDD")}`,
+        `https://wcpredictor.fun/api/matches?date=${this.date.format("YYYYMMDD")}`
       )
       .then((response) => {
         console.log(response);
-        let worldCupData = response.data.leagues.filter(
-          (leagues: any) => leagues.parentLeagueName === "World Cup"
-        );
+        let worldCupData = response.data.leagues.filter((leagues: any) => leagues.parentLeagueName === "World Cup");
         worldCupData.forEach((l: any) => {
           l.matches.forEach((match: any) => {
-            this.matches.push(
-              new Match(
-                match.home.name,
-                match.away.name,
-                match.status.started,
-                match.home.score,
-                match.away.score
-              )
-            );
+            this.matches.push(new Match(match.home.name, match.away.name, match.status.started, match.home.score, match.away.score));
           });
         });
       })
@@ -156,15 +123,27 @@ export default class Predictor extends Vue {
 
   private savePrediction() {
     let bodyJson: any = [];
-    this.matches.forEach((match) =>
-      bodyJson.push({
-        match: `${match.homeTeam}${match.awayTeam}`,
-        user: `vigan`,
-        predictedHomeScore: Number(match.predHomeTeamScore),
-        predictedAwayScore: Number(match.predAwayTeamScore),
+    this.matches.forEach((match) => {
+      if (match.predHomeTeamScore && match.predAwayTeamScore) {
+        bodyJson.push({
+          match: `${match.homeTeam}${match.awayTeam}`,
+          user: this.$store.state.username,
+          predictedHomeScore: Number(match.predHomeTeamScore),
+          predictedAwayScore: Number(match.predAwayTeamScore),
+        });
+      }
+    });
+
+    this.axios
+      .post(`https://wcpredictor.fun/api/predict`, {
+        predictions: bodyJson,
       })
-    );
-    console.log(JSON.stringify(bodyJson));
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 }
 </script>
