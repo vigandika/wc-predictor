@@ -1,3 +1,56 @@
-[
-    {"username": "myrteza", "match": "QatarEcuador", "homeTeam": "Qatar", "awayTeam": "Ecuador", "homeScore": 6, "awayScore": 2, "predictedHomeScore": 3, "predictedAwayScore": 0}
+[   
+    {"username": "myrteza", "match": "QatarEcuador", "homeTeam": "Qatar", "awayTeam": "Ecuador", "homeScore": 0, "awayScore": 2, "predictedHomeScore": 2, "predictedAwayScore": 0},
+    {"username": "vigan", "match": "QatarEcuador", "homeTeam": "Qatar", "awayTeam": "Ecuador", "homeScore": 0, "awayScore": 2, "predictedHomeScore": 0, "predictedAwayScore": 1},
+    {"username": "andi", "match": "QatarEcuador", "homeTeam": "Qatar", "awayTeam": "Ecuador", "homeScore": 0, "awayScore": 2, "predictedHomeScore": 1, "predictedAwayScore": 3},
+    {"username": "ilir", "match": "QatarEcuador", "homeTeam": "Qatar", "awayTeam": "Ecuador", "homeScore": 0, "awayScore": 2, "predictedHomeScore": 2, "predictedAwayScore": 0},
+    {"username": "hana", "match": "QatarEcuador", "homeTeam": "Qatar", "awayTeam": "Ecuador", "homeScore": 0, "awayScore": 2, "predictedHomeScore": 2, "predictedAwayScore": 1},
+    {"username": "ardian", "match": "QatarEcuador", "homeTeam": "Qatar", "awayTeam": "Ecuador", "homeScore": 0, "awayScore": 2, "predictedHomeScore": 0, "predictedAwayScore": 2},
+
+    {"username": "myrteza", "match": "EnglandIran", "homeTeam": "England", "awayTeam": "Iran", "homeScore": 6, "awayScore": 2, "predictedHomeScore": 2, "predictedAwayScore": 1},
+    {"username": "myrteza", "match": "SenegalNetherlands", "homeTeam": "Senegal", "awayTeam": "Netherlands", "homeScore": 0, "awayScore": 2, "predictedHomeScore": 1, "predictedAwayScore": 3},
+    {"username": "myrteza", "match": "USAWales", "homeTeam": "USA", "awayTeam": "Wales", "homeScore": 1, "awayScore": 1, "predictedHomeScore": 1, "predictedAwayScore": 1},
+    {"username": "myrteza", "match": "ArgentinaSaudi Arabia", "homeTeam": "Argentina", "awayTeam": "Saudi Arabia", "homeScore": 1, "awayScore": 6, "predictedHomeScore": 5, "predictedAwayScore": 0},
+    {"username": "myrteza", "match": "MexicoPoland", "homeTeam": "Mexico", "awayTeam": "Poland", "homeScore": 0, "awayScore": 0, "predictedHomeScore": 2, "predictedAwayScore": 1},
+    {"username": "myrteza", "match": "DenmarkTunisia", "homeTeam": "Denmark", "awayTeam": "Tunisia", "homeScore": 0, "awayScore": 0, "predictedHomeScore": 2, "predictedAwayScore": 0},
+    {"username": "myrteza", "match": "FranceAustralia", "homeTeam": "France", "awayTeam": "Australia", "homeScore": 4, "awayScore": 1, "predictedHomeScore": 3, "predictedAwayScore": 1},
+
+    {"username": "ardian", "match": "EnglandIran", "homeTeam": "England", "awayTeam": "Iran", "homeScore": 6, "awayScore": 2, "predictedHomeScore": 3, "predictedAwayScore": 0},
+    {"username": "ardian", "match": "SenegalNetherlands", "homeTeam": "Senegal", "awayTeam": "Netherlands", "homeScore": 0, "awayScore": 2, "predictedHomeScore": 1, "predictedAwayScore": 2},
+    {"username": "ardian", "match": "USAWales", "homeTeam": "USA", "awayTeam": "Wales", "homeScore": 1, "awayScore": 1, "predictedHomeScore": 0, "predictedAwayScore": 2},
+    {"username": "ardian", "match": "ArgentinaSaudi Arabia", "homeTeam": "Argentina", "awayTeam": "Saudi Arabia", "homeScore": 1, "awayScore": 6, "predictedHomeScore": 6, "predictedAwayScore": 0},
+    {"username": "ardian", "match": "MexicoPoland", "homeTeam": "Mexico", "awayTeam": "Poland", "homeScore": 0, "awayScore": 0, "predictedHomeScore": 1, "predictedAwayScore": 1},
+    {"username": "ardian", "match": "DenmarkTunisia", "homeTeam": "Denmark", "awayTeam": "Tunisia", "homeScore": 0, "awayScore": 0, "predictedHomeScore": 2, "predictedAwayScore": 1},
+    {"username": "ardian", "match": "FranceAustralia", "homeTeam": "France", "awayTeam": "Australia", "homeScore": 4, "awayScore": 1, "predictedHomeScore": 2, "predictedAwayScore": 0},
+
+
+    {"username": "andi", "match": "EnglandIran", "homeTeam": "England", "awayTeam": "Iran", "homeScore": 6, "awayScore": 2, "predictedHomeScore": 2, "predictedAwayScore": 0},
+    {"username": "andi", "match": "SenegalNetherlands", "homeTeam": "Senegal", "awayTeam": "Netherlands", "homeScore": 0, "awayScore": 2, "predictedHomeScore": 1, "predictedAwayScore": 3},
+    {"username": "andi", "match": "USAWales", "homeTeam": "USA", "awayTeam": "Wales", "homeScore": 1, "awayScore": 1, "predictedHomeScore": 1, "predictedAwayScore": 2},
+    {"username": "andi", "match": "ArgentinaSaudi Arabia", "homeTeam": "Argentina", "awayTeam": "Saudi Arabia", "homeScore": 1, "awayScore": 6, "predictedHomeScore": 3, "predictedAwayScore": 0},
+    {"username": "andi", "match": "MexicoPoland", "homeTeam": "Mexico", "awayTeam": "Poland", "homeScore": 0, "awayScore": 0, "predictedHomeScore": 0, "predictedAwayScore": 2},
+    {"username": "andi", "match": "FranceAustralia", "homeTeam": "France", "awayTeam": "Australia", "homeScore": 4, "awayScore": 1, "predictedHomeScore": 3, "predictedAwayScore": 0},
+
+    {"username": "vigan", "match": "EnglandIran", "homeTeam": "England", "awayTeam": "Iran", "homeScore": 6, "awayScore": 2, "predictedHomeScore": 2, "predictedAwayScore": 0},
+    {"username": "vigan", "match": "SenegalNetherlands", "homeTeam": "Senegal", "awayTeam": "Netherlands", "homeScore": 0, "awayScore": 2, "predictedHomeScore": 0, "predictedAwayScore": 2},
+    {"username": "vigan", "match": "USAWales", "homeTeam": "USA", "awayTeam": "Wales", "homeScore": 1, "awayScore": 1, "predictedHomeScore": 1, "predictedAwayScore": 1},
+    {"username": "vigan", "match": "ArgentinaSaudi Arabia", "homeTeam": "Argentina", "awayTeam": "Saudi Arabia", "homeScore": 1, "awayScore": 6, "predictedHomeScore": 3, "predictedAwayScore": 0},
+    {"username": "vigan", "match": "MexicoPoland", "homeTeam": "Mexico", "awayTeam": "Poland", "homeScore": 0, "awayScore": 0, "predictedHomeScore": 0, "predictedAwayScore": 0},
+    {"username": "vigan", "match": "DenmarkTunisia", "homeTeam": "Denmark", "awayTeam": "Tunisia", "homeScore": 0, "awayScore": 0, "predictedHomeScore": 3, "predictedAwayScore": 0},
+    {"username": "vigan", "match": "FranceAustralia", "homeTeam": "France", "awayTeam": "Australia", "homeScore": 4, "awayScore": 1, "predictedHomeScore": 1, "predictedAwayScore": 0},
+
+    {"username": "ilir", "match": "EnglandIran", "homeTeam": "England", "awayTeam": "Iran", "homeScore": 6, "awayScore": 2, "predictedHomeScore": 3, "predictedAwayScore": 1},
+    {"username": "ilir", "match": "SenegalNetherlands", "homeTeam": "Senegal", "awayTeam": "Netherlands", "homeScore": 0, "awayScore": 2, "predictedHomeScore": 0, "predictedAwayScore": 3},
+    {"username": "ilir", "match": "USAWales", "homeTeam": "USA", "awayTeam": "Wales", "homeScore": 1, "awayScore": 1, "predictedHomeScore": 1, "predictedAwayScore": 2},
+    {"username": "ilir", "match": "ArgentinaSaudi Arabia", "homeTeam": "Argentina", "awayTeam": "Saudi Arabia", "homeScore": 1, "awayScore": 6, "predictedHomeScore": 4, "predictedAwayScore": 1},
+    {"username": "ilir", "match": "MexicoPoland", "homeTeam": "Mexico", "awayTeam": "Poland", "homeScore": 0, "awayScore": 0, "predictedHomeScore": 2, "predictedAwayScore": 1},
+    {"username": "ilir", "match": "DenmarkTunisia", "homeTeam": "Denmark", "awayTeam": "Tunisia", "homeScore": 0, "awayScore": 0, "predictedHomeScore": 3, "predictedAwayScore": 0},
+    {"username": "ilir", "match": "FranceAustralia", "homeTeam": "France", "awayTeam": "Australia", "homeScore": 4, "awayScore": 1, "predictedHomeScore": 2, "predictedAwayScore": 1},
+
+    {"username": "hana", "match": "EnglandIran", "homeTeam": "England", "awayTeam": "Iran", "homeScore": 6, "awayScore": 2, "predictedHomeScore": 2, "predictedAwayScore": 0},
+    {"username": "hana", "match": "SenegalNetherlands", "homeTeam": "Senegal", "awayTeam": "Netherlands", "homeScore": 0, "awayScore": 2, "predictedHomeScore": 3, "predictedAwayScore": 1},
+    {"username": "hana", "match": "USAWales", "homeTeam": "USA", "awayTeam": "Wales", "homeScore": 1, "awayScore": 1, "predictedHomeScore": 2, "predictedAwayScore": 1},
+    {"username": "hana", "match": "ArgentinaSaudi Arabia", "homeTeam": "Argentina", "awayTeam": "Saudi Arabia", "homeScore": 1, "awayScore": 6, "predictedHomeScore": 3, "predictedAwayScore": 0},
+    {"username": "hana", "match": "MexicoPoland", "homeTeam": "Mexico", "awayTeam": "Poland", "homeScore": 0, "awayScore": 0, "predictedHomeScore": 1, "predictedAwayScore": 0},
+    {"username": "hana", "match": "DenmarkTunisia", "homeTeam": "Denmark", "awayTeam": "Tunisia", "homeScore": 0, "awayScore": 0, "predictedHomeScore": 2, "predictedAwayScore": 0},
+    {"username": "hana", "match": "FranceAustralia", "homeTeam": "France", "awayTeam": "Australia", "homeScore": 4, "awayScore": 1, "predictedHomeScore": 1, "predictedAwayScore": 0}
 ]
