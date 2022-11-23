@@ -1,12 +1,11 @@
 <template>
   <v-container>
     <template>
-      <v-expansion-panels v-model="history">
-        <v-expansion-panel v-for="(key, value) in Object.entries(history)" :key="value">
-          <v-expansion-panel-header> {{key}} {{value}} </v-expansion-panel-header>
-          <v-expansion-panel-content>
-            Lorem ipsum dolor sits amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-            enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      <v-expansion-panels :key="panel">
+        <v-expansion-panel v-for="(match, value) in history" :key="value">
+          <v-expansion-panel-header> {{match.homeTeam}} {{ match.homeScore }} - {{ match.awayScore }} {{match.awayTeam}} </v-expansion-panel-header>
+          <v-expansion-panel-content v-for="(prediction, username) in match.predictions" :key="username">
+            {{username}}: {{ prediction.predictedHomeScore }} - {{ prediction.predictedAwayScore }}
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -30,6 +29,7 @@ type MatchHistory = {
 export default class History extends Vue {
   private history: Record<string, MatchHistory> = {};
   private predictions: Array<any> = [];
+  private panel = false;
 
   mounted() {
     let data = [
@@ -96,6 +96,7 @@ export default class History extends Vue {
     ];
     this.predictions = data;
     this.populateHistory();
+    this.panel = true;
   }
 
   private populateHistory() {
@@ -103,7 +104,7 @@ export default class History extends Vue {
       if (prediction.match in this.history) {
         let homePred = prediction.predictedHomeScore;
         let awayPred = prediction.predictedAwayScore;
-        this.history[prediction.match].predictions[prediction.username] = { homePred, awayPred };
+        this.history[prediction.match].predictions[prediction.username] = { predictedHomeScore: homePred, predictedAwayScore: awayPred };
       } else {
         this.history[prediction.match] = {
           homeTeam: prediction.homeTeam,
@@ -116,7 +117,7 @@ export default class History extends Vue {
         let homePred = prediction.predictedHomeScore;
         let awayPred = prediction.predictedAwayScore;
         this.history[prediction.match].predictions = {
-          [prediction.username]: { homePred, awayPred },
+          [prediction.username]: { predictedHomeScore: homePred, predictedAwayScore: awayPred },
         };
       }
     });
