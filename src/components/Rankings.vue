@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-data-table dense :headers="headers" :items="rankings" hide-default-footer class="elevation-1"></v-data-table>
+    <v-data-table dense :headers="headers" :items="rankings" :sort-by="['points']" :sort-desc="[true, false]" hide-default-footer class="elevation-1"></v-data-table>
   </v-container>
 </template>
 
