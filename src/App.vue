@@ -30,7 +30,7 @@ export default class App extends Vue {
       alert("input username and password");
     } else {
       if (["ilir", "andi", "vigan", "ardian", "myrteza", "hana"].includes(username.toLowerCase())) {
-        this.$store.commit("login", username);
+        this.$store.commit("login", username.toLowerCase());
         this.isAlertVisible = false;
       } else {
         alert("unknown user. Contact administrator");
