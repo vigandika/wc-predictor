@@ -79,6 +79,7 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
+    <div style="color: green;" v-if="predictionSubmitted"> Predictions submitted successfully! You can see other people's prediction as soon as the game starts. </div>  
     <v-btn plain right style="background-color: #18a558; color: white" @click="savePrediction"> SAVE </v-btn>
     <div style="padding: 10px">
       <v-btn v-if="username === 'vigan'" plain right style="background-color: red; color: white" @click="updateMatches">
@@ -101,6 +102,7 @@ export default class Predictor extends Vue {
   private matches: Array<Match> = [];
   private date = moment();
   private username = store.state.username;
+  private predictionSubmitted = false;
 
   mounted() {
     this.loadData();
@@ -134,8 +136,8 @@ export default class Predictor extends Vue {
         bodyJson.push({
           match: `${match.homeTeam}${match.awayTeam}`,
           user: this.$store.state.username,
-          predictedHomeScore: Number(match.predHomeTeamScore),
-          predictedAwayScore: Number(match.predAwayTeamScore),
+          predictionHomeScore: Number(match.predHomeTeamScore),
+          predictionAwayScore: Number(match.predAwayTeamScore),
         });
       }
     });
@@ -143,7 +145,7 @@ export default class Predictor extends Vue {
     this.axios
       .post(`https://wcpredictor.fun/api/predict`, bodyJson)
       .then((response) => {
-        console.log(response);
+        this.predictionSubmitted = true;
         this.matches = [];
       })
       .catch(function (error) {
@@ -153,7 +155,8 @@ export default class Predictor extends Vue {
 
   private updateMatches() {
     let bodyJson: any = [];
-    this.matches.forEach((match) =>
+    this.matches.forEach((match) => {
+      if (match.started) {
       bodyJson.push({
         match: `${match.homeTeam}${match.awayTeam}`,
         homeTeam: match.homeTeam,
@@ -161,7 +164,19 @@ export default class Predictor extends Vue {
         homeScore: match.homeTeamScore,
         awayScore: match.awayTeamScore,
       })
-    );
+      }
+
+  });
+
+    this.axios
+      .post(`https://wcpredictor.fun/api/results`, bodyJson)
+      .then((response) => {
+        console.log(response);
+        this.matches = [];
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     console.log(JSON.stringify(bodyJson));
   }
 }

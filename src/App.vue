@@ -6,8 +6,7 @@
       <v-btn @click="getUser">Ok </v-btn>
     </v-alert>
     <div id="nav">
-      <router-link to="/">Predict</router-link> |
-      <router-link to="/about">Rankings</router-link> |
+      <router-link to="/">Predict</router-link> | <router-link to="/about">Rankings</router-link> |
       <router-link to="/history">History</router-link>
     </div>
     <router-view v-if="!isAlertVisible" />
@@ -15,25 +14,30 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue, Watch } from 'vue-property-decorator';
-  import store from '@/store/index';
+import { Component, Vue, Watch } from "vue-property-decorator";
+import store from "@/store/index";
 
-    @Component({
-        name: 'App',
-    })
-    export default class App extends Vue {
-      private username: string = '';
-      private isAlertVisible: boolean = true;
+@Component({
+  name: "App",
+})
+export default class App extends Vue {
+  private username: string = "";
+  private isAlertVisible: boolean = true;
 
-      private getUser() {
-        if (this.username === '') {
-          alert('input username and password');
-        } else {
-          this.$store.commit('login', this.username);
-          this.isAlertVisible = false;
-        }
+  private getUser() {
+    let username = this.username;
+    if (username === "") {
+      alert("input username and password");
+    } else {
+      if (["ilir", "andi", "vigan", "ardian", "myrteza", "hana"].includes(username.toLowerCase())) {
+        this.$store.commit("login", username);
+        this.isAlertVisible = false;
+      } else {
+        alert("unknown user. Contact administrator");
       }
     }
+  }
+}
 </script>
 <style>
 #app {
