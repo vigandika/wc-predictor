@@ -117,7 +117,7 @@ export default class Predictor extends Vue {
       )
       .then((response) => {
         console.log(response);
-        let worldCupData = response.data.leagues.filter((leagues: any) => leagues.parentLeagueName === "World Cup");
+        let worldCupData = response.data.leagues.filter((leagues: any) => leagues.parentLeagueName === "World Cup" || leagues.parentLeagueId === 77);
         worldCupData.forEach((l: any) => {
           l.matches.forEach((match: any) => {
             this.matches.push(new Match(match.home.name, match.away.name, match.status.started, match.home.score, match.away.score));
