@@ -1,20 +1,49 @@
 <template>
-  <div id="app">
-    <v-alert prominent :value="isAlertVisible">
-      <v-text-field type="text" placeholder="username" v-model="username"> </v-text-field>
-      <v-text-field type="password" placeholder="password"> </v-text-field>
-      <v-btn @click="getUser">Ok </v-btn>
-    </v-alert>
-    <div id="nav">
-      <router-link to="/">Predict</router-link> | <router-link to="/about">Rankings</router-link> |
-      <router-link to="/history">History</router-link>
-    </div>
-    <router-view v-if="!isAlertVisible" />
-  </div>
+  <v-app>
+    <v-dialog v-model="isAlertVisible" max-width="360" persistent>
+      <v-card class="pa-2">
+        <v-card-title class="justify-center">WC Predictor</v-card-title>
+        <v-card-subtitle class="text-center pb-4">Enter your name to join</v-card-subtitle>
+        <v-card-text>
+          <v-text-field
+            v-model="username"
+            label="Username"
+            outlined
+            dense
+            hide-details
+            autofocus
+            @keyup.enter="getUser"
+          />
+        </v-card-text>
+        <v-card-actions class="justify-center pb-4">
+          <v-btn color="primary" depressed @click="getUser">Continue</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <template v-if="!isAlertVisible">
+      <v-app-bar color="#1b5e20" dark dense flat>
+        <v-toolbar-title class="font-weight-medium">WC Predictor</v-toolbar-title>
+        <v-spacer />
+        <span class="caption text-uppercase">{{ loggedInUser }}</span>
+      </v-app-bar>
+
+      <v-tabs background-color="transparent" color="#1b5e20" grow centered>
+        <v-tab to="/">Predict</v-tab>
+        <v-tab to="/about">Rankings</v-tab>
+        <v-tab to="/history">History</v-tab>
+        <v-tab to="/rules">Rregullat</v-tab>
+      </v-tabs>
+
+      <v-main class="grey lighten-5">
+        <router-view />
+      </v-main>
+    </template>
+  </v-app>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import store from "@/store/index";
 
 @Component({
@@ -24,40 +53,41 @@ export default class App extends Vue {
   private username: string = "";
   private isAlertVisible: boolean = true;
 
+  get loggedInUser() {
+    return store.state.username;
+  }
+
   private getUser() {
-    let username = this.username;
-    if (username === "") {
-      alert("input username and password");
+    const name = this.username.trim().toLowerCase();
+    const users = [
+        "jona",
+        "vigan",
+        "asdren",
+        "andi",
+        "ardian",
+        "dard",
+        "diart",
+        "dielli",
+        "hana",
+        "ilir",
+        "joni",
+        "kastri",
+        "laid",
+        "ardita",
+        "moza",
+        "myrteza",
+        "rozi",
+        "artan"
+    ];
+    if (name === "") {
+      return;
+    }
+    if (users.includes(name)) {
+      this.$store.commit("login", name);
+      this.isAlertVisible = false;
     } else {
-      if (["ilir", "andi", "vigan", "ardian", "myrteza", "hana"].includes(username.toLowerCase())) {
-        this.$store.commit("login", username.toLowerCase());
-        this.isAlertVisible = false;
-      } else {
-        alert("unknown user. Contact administrator");
-      }
+      alert("Unknown user — ask the admin to add you.");
     }
   }
 }
 </script>
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>

@@ -1,48 +1,93 @@
 <template>
-  <v-container>
-    <v-data-table dense :headers="headers" :items="rankings" :sort-by="['points']" :sort-desc="[true, false]" hide-default-footer class="elevation-1"></v-data-table>
+  <v-container class="py-6" style="max-width: 480px">
+    <h2 class="text-h6 font-weight-medium text-center mb-4">Standings</h2>
+
+    <v-progress-linear v-if="loading && rankings.length === 0" indeterminate color="green darken-3" class="mb-4" />
+
+    <v-alert v-if="!loading && rankings.length === 0" type="info" text dense>
+      No scored matches yet. Predictions will appear here once results are posted.
+    </v-alert>
+
+    <v-card v-else outlined>
+      <v-simple-table dense>
+        <thead>
+          <tr>
+            <th class="text-left">#</th>
+            <th class="text-left">Player</th>
+            <th class="text-center">Played</th>
+            <th class="text-right">Pts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, index) in rankings" :key="row.username" :class="rowClass(index)">
+            <td>{{ index + 1 }}</td>
+            <td class="font-weight-medium">{{ row.username }}</td>
+            <td class="text-center">{{ row.matchesPredicted }}</td>
+            <td class="text-right font-weight-bold">{{ row.points }}</td>
+          </tr>
+        </tbody>
+      </v-simple-table>
+    </v-card>
+
+    <p v-if="lastChecked" class="caption grey--text text-center mt-3">
+      Last checked {{ lastChecked }}
+    </p>
   </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Match } from "@/models/Match";
 import axios from "axios";
-import moment from "moment";
 import calculateScore from '@/helper/scoreHelper';
 
 @Component
 export default class Rankings extends Vue {
   private axios = axios.create({});
-  private matches: Array<Match> = [];
-  private rankings = [];
+  private rankings: Array<{ username: string; matchesPredicted: number; points: number }> = [];
   private predictions: Array<any> = [];
-  private date = moment();
-
-  get headers() {
-    return [
-      { text: "User", value: "username" },
-      { text: "Predictions", value: "matchesPredicted" },
-      { text: "Points", value: "points" },
-    ];
-  }
+  private refreshTimer: number | null = null;
+  private loading = false;
+  private lastChecked: string | null = null;
 
   mounted() {
-    this.axios.get(
-      `https://wcpredictor.fun/api/predictionOutcomes`
-    ).then(response => {
-      console.log(response);
+    this.fetchRankings();
+    this.refreshTimer = window.setInterval(this.fetchRankings, 30000);
+  }
+
+  beforeDestroy() {
+    if (this.refreshTimer !== null) {
+      clearInterval(this.refreshTimer);
+    }
+  }
+
+  private rowClass(index: number): string {
+    if (index === 0) return "gold-row";
+    if (index === 1) return "silver-row";
+    if (index === 2) return "bronze-row";
+    return "";
+  }
+
+  private fetchRankings() {
+    this.loading = true;
+    this.axios.get(`/api/predictionOutcomes`).then(response => {
       this.predictions = response.data;
       this.calculatePoints();
     }).catch(error => {
       console.error(error);
-    })
+    }).finally(() => {
+      this.loading = false;
+      this.lastChecked = new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+    });
   }
 
   private calculatePoints() {
-    let map: any = {};
+    const map: Record<string, { username: string; matchesPredicted: number; points: number }> = {};
     this.predictions.forEach((prediction) => {
-      let score = calculateScore(prediction);
+      const score = calculateScore(prediction);
 
       if (prediction.username in map) {
         map[prediction.username].matchesPredicted += 1;
@@ -56,12 +101,21 @@ export default class Rankings extends Vue {
       }
     });
 
-    console.log(map);
-    // @ts-ignore
-    this.rankings = Object.values(map);
+    this.rankings = Object.values(map).sort((a, b) => b.points - a.points);
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+.gold-row {
+  background: #fff8e1;
+}
+
+.silver-row {
+  background: #f5f5f5;
+}
+
+.bronze-row {
+  background: #fbe9e7;
+}
+</style>

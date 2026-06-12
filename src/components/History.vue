@@ -1,89 +1,134 @@
 <template>
-  <v-container>
-    <template>
-      <v-expansion-panels :key="panel">
-        <v-expansion-panel v-for="(match, value) in history" :key="value">
-          <v-expansion-panel-header>
-            {{ match.homeTeam }} {{ match.homeScore }} - {{ match.awayScore }} {{ match.awayTeam }}
-          </v-expansion-panel-header>
-          <v-expansion-panel-content v-for="(prediction, username) in match.predictions" :key="username">
-            {{ username }}: {{ prediction.predictedHomeScore }} - {{ prediction.predictedAwayScore }}
-            <v-chip style="float: right" pill>{{
-              getScore(prediction.predictedHomeScore, prediction.predictedAwayScore, match.homeScore, match.awayScore)
-            }}</v-chip>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </template>
+  <v-container class="py-6" style="max-width: 520px">
+    <h2 class="text-h6 font-weight-medium text-center mb-4">Match history</h2>
+
+    <v-progress-linear v-if="loading && matchList.length === 0" indeterminate color="green darken-3" class="mb-4" />
+
+    <v-alert v-if="!loading && matchList.length === 0" type="info" text dense>
+      No completed matches yet.
+    </v-alert>
+
+    <v-expansion-panels v-else accordion>
+      <v-expansion-panel v-for="match in matchList" :key="match.id">
+        <v-expansion-panel-header class="font-weight-medium">
+          {{ match.homeTeam }}
+          <span class="mx-2 primary--text">{{ match.homeScore }} – {{ match.awayScore }}</span>
+          {{ match.awayTeam }}
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <div
+            v-for="entry in match.entries"
+            :key="entry.username"
+            class="d-flex justify-space-between align-center py-1"
+          >
+            <span>{{ entry.username }}</span>
+            <span class="grey--text">{{ entry.predictedHomeScore }} – {{ entry.predictedAwayScore }}</span>
+            <v-chip x-small :color="entry.points >= 4 ? 'green' : entry.points >= 2 ? 'orange' : 'grey'" dark>
+              {{ entry.points }} pts
+            </v-chip>
+          </div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
+
+    <p v-if="lastChecked" class="caption grey--text text-center mt-3">
+      Last checked {{ lastChecked }}
+    </p>
   </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Match } from "@/models/Match";
 import calculateScore from "@/helper/scoreHelper";
 import axios from "axios";
 
-type MatchHistory = {
+type HistoryEntry = {
+  username: string;
+  predictedHomeScore: number;
+  predictedAwayScore: number;
+  points: number;
+};
+
+type MatchListItem = {
+  id: string;
   homeTeam: string;
   awayTeam: string;
   homeScore: number;
   awayScore: number;
-  predictions: Record<string, { predictedHomeScore: number; predictedAwayScore: number }> | any;
+  entries: HistoryEntry[];
 };
 
 @Component({})
 export default class History extends Vue {
-  private history: Record<string, MatchHistory> = {};
+  private matchList: MatchListItem[] = [];
   private predictions: Array<any> = [];
-  private panel = false;
   private axios = axios.create({});
+  private refreshTimer: number | null = null;
+  private loading = false;
+  private lastChecked: string | null = null;
 
   mounted() {
+    this.fetchHistory();
+    this.refreshTimer = window.setInterval(this.fetchHistory, 30000);
+  }
+
+  beforeDestroy() {
+    if (this.refreshTimer !== null) {
+      clearInterval(this.refreshTimer);
+    }
+  }
+
+  private fetchHistory() {
+    this.loading = true;
     this.axios
-      .get(`https://wcpredictor.fun/api/predictionOutcomes`)
+      .get(`/api/predictionOutcomes`)
       .then((response) => {
-        console.log(response);
         this.predictions = response.data;
-        this.populateHistory();
-        this.panel = true;
+        this.buildMatchList();
       })
       .catch((error) => {
         console.error(error);
+      })
+      .finally(() => {
+        this.loading = false;
+        this.lastChecked = new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        });
       });
   }
 
-  private populateHistory() {
+  private buildMatchList() {
+    const grouped: Record<string, MatchListItem> = {};
+
     this.predictions.forEach((prediction) => {
-      if (prediction.match in this.history) {
-        let homePred = prediction.predictedHomeScore;
-        let awayPred = prediction.predictedAwayScore;
-        this.history[prediction.match].predictions[prediction.username] = { predictedHomeScore: homePred, predictedAwayScore: awayPred };
+      const points = calculateScore(prediction);
+      const entry: HistoryEntry = {
+        username: prediction.username,
+        predictedHomeScore: prediction.predictedHomeScore,
+        predictedAwayScore: prediction.predictedAwayScore,
+        points,
+      };
+
+      if (prediction.match in grouped) {
+        grouped[prediction.match].entries.push(entry);
       } else {
-        this.history[prediction.match] = {
+        grouped[prediction.match] = {
+          id: prediction.match,
           homeTeam: prediction.homeTeam,
           awayTeam: prediction.awayTeam,
           homeScore: prediction.homeScore,
           awayScore: prediction.awayScore,
-          predictions: {},
-        };
-
-        let homePred = prediction.predictedHomeScore;
-        let awayPred = prediction.predictedAwayScore;
-        this.history[prediction.match].predictions = {
-          [prediction.username]: { predictedHomeScore: homePred, predictedAwayScore: awayPred },
+          entries: [entry],
         };
       }
     });
-  }
 
-  private getScore(predictedHomeScore: number, predictedAwayScore: number, homeScore: number, awayScore: number) {
-    return calculateScore({
-      predictedHomeScore,
-      predictedAwayScore,
-      homeScore,
-      awayScore,
-    });
+    this.matchList = Object.values(grouped).map((match) => ({
+      ...match,
+      entries: match.entries.sort((a, b) => b.points - a.points),
+    }));
   }
 }
 </script>

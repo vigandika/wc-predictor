@@ -1,6 +1,13 @@
 module.exports = {
   lintOnSave: false,
-  publicPath: '/wc-predictor/',
+  publicPath: '/',
+  devServer: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080'
+      }
+    }
+  },
   transpileDependencies: [
     'vuetify'
   ]
