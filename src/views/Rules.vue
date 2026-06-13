@@ -38,7 +38,7 @@ export default class Rules extends Vue {
         "<strong>+1 pikë</strong> — diferenca e saktë e golave (p.sh. fitore me 2 gola diferencë)",
         "<strong>+1 pikë</strong> — rezultati ekzakt (p.sh. 2–1)",
         "Maksimumi është <strong>5 pikë</strong> për ndeshje (3 + 1 + 1).",
-        "Shembull: parashikon 2–1, rezultati 2–1 → 5 pikë. Parashikon 2–0, rezultati 2–1 → 4 pikë (fituesi + diferenca). Parashikon 1–0, rezultati 2–1 → 3 pikë (vetëm fituesi).",
+        "Shembull: parashikon 2–1, rezultati 2–1 → 5 pikë. Parashikon 2–0, rezultati 3–1 → 4 pikë (fituesi + diferenca). Parashikon 1–0, rezultati 2–1 → 3 pikë (vetëm fituesi).",
       ],
     },
     {

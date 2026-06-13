@@ -28,7 +28,13 @@
         <span class="caption text-uppercase">{{ loggedInUser }}</span>
       </v-app-bar>
 
-      <v-tabs background-color="transparent" color="#1b5e20" grow centered>
+      <v-tabs
+        background-color="transparent"
+        color="#1b5e20"
+        show-arrows
+        center-active
+        class="app-tabs"
+      >
         <v-tab to="/">Predict</v-tab>
         <v-tab to="/about">Rankings</v-tab>
         <v-tab to="/history">History</v-tab>
@@ -91,3 +97,16 @@ export default class App extends Vue {
   }
 }
 </script>
+
+<style>
+.app-tabs .v-slide-group__wrapper {
+  -webkit-overflow-scrolling: touch;
+}
+
+.app-tabs .v-tab {
+  min-width: 72px;
+  font-size: 13px;
+  letter-spacing: 0;
+  padding: 0 12px;
+}
+</style>

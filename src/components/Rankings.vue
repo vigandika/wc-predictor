@@ -45,19 +45,11 @@ export default class Rankings extends Vue {
   private axios = axios.create({});
   private rankings: Array<{ username: string; matchesPredicted: number; points: number }> = [];
   private predictions: Array<any> = [];
-  private refreshTimer: number | null = null;
   private loading = false;
   private lastChecked: string | null = null;
 
   mounted() {
     this.fetchRankings();
-    this.refreshTimer = window.setInterval(this.fetchRankings, 30000);
-  }
-
-  beforeDestroy() {
-    if (this.refreshTimer !== null) {
-      clearInterval(this.refreshTimer);
-    }
   }
 
   private rowClass(index: number): string {

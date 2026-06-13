@@ -10,10 +10,12 @@
 
     <v-expansion-panels v-else accordion>
       <v-expansion-panel v-for="match in matchList" :key="match.id">
-        <v-expansion-panel-header class="font-weight-medium">
-          {{ match.homeTeam }}
-          <span class="mx-2 primary--text">{{ match.homeScore }} – {{ match.awayScore }}</span>
-          {{ match.awayTeam }}
+        <v-expansion-panel-header class="match-panel-header">
+          <div class="match-header">
+            <span class="match-header__team">{{ match.homeTeam }}</span>
+            <span class="match-header__score">{{ match.homeScore }} – {{ match.awayScore }}</span>
+            <span class="match-header__team">{{ match.awayTeam }}</span>
+          </div>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <div
@@ -23,7 +25,12 @@
           >
             <span>{{ entry.username }}</span>
             <span class="grey--text">{{ entry.predictedHomeScore }} – {{ entry.predictedAwayScore }}</span>
-            <v-chip x-small :color="entry.points >= 4 ? 'green' : entry.points >= 2 ? 'orange' : 'grey'" dark>
+            <v-chip
+              small
+              class="points-chip"
+              :color="entry.points >= 4 ? 'green' : entry.points >= 2 ? 'orange' : 'grey'"
+              dark
+            >
               {{ entry.points }} pts
             </v-chip>
           </div>
@@ -63,19 +70,11 @@ export default class History extends Vue {
   private matchList: MatchListItem[] = [];
   private predictions: Array<any> = [];
   private axios = axios.create({});
-  private refreshTimer: number | null = null;
   private loading = false;
   private lastChecked: string | null = null;
 
   mounted() {
     this.fetchHistory();
-    this.refreshTimer = window.setInterval(this.fetchHistory, 30000);
-  }
-
-  beforeDestroy() {
-    if (this.refreshTimer !== null) {
-      clearInterval(this.refreshTimer);
-    }
   }
 
   private fetchHistory() {
@@ -132,3 +131,48 @@ export default class History extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.match-panel-header >>> .v-expansion-panel-header__icon {
+  margin-left: 8px;
+}
+
+.match-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 10px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.match-header__team {
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.match-header__team:first-child {
+  text-align: right;
+}
+
+.match-header__team:last-child {
+  text-align: left;
+}
+
+.match-header__score {
+  flex-shrink: 0;
+  padding: 2px 10px;
+  font-weight: 700;
+  color: #1b5e20;
+  white-space: nowrap;
+}
+
+.points-chip {
+  font-size: 13px !important;
+  font-weight: 600;
+  height: 26px !important;
+  padding: 0 10px !important;
+}
+</style>
