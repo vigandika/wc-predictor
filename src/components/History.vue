@@ -47,7 +47,7 @@
               <v-chip
                 small
                 class="points-chip"
-                :color="entry.points >= 6 ? 'green' : entry.points >= 4 ? 'orange' : 'grey'"
+                :color="entry.points >= 5 ? 'green' : entry.points >= 3 ? 'orange' : 'grey'"
                 dark
               >
                 {{ entry.points }} pts
