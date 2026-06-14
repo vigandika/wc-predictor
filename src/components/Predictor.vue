@@ -27,6 +27,10 @@
         Match started · {{ match.homeTeamScore }} – {{ match.awayTeamScore }}
       </div>
 
+      <p v-if="match.kickoffLabel" class="kickoff-time mb-2">
+        {{ match.kickoffLabel }}
+      </p>
+
       <v-row align="center" justify="center" class="match-row" no-gutters>
         <v-col cols="4" class="team-col">
           <v-card class="team-card ht-card" outlined>
@@ -82,6 +86,11 @@
         </div>
       </div>
     </div>
+
+    <p v-if="!loading && matches.length > 0" class="late-games-note mb-4">
+      <v-icon small class="late-games-note__icon">mdi-moon-waning-crescent</v-icon>
+      Ndeshjet pas orës 01:00 shfaqen te dita tjetër — mos harro t'i parashikosh para se të flesh.
+    </p>
 
     <div v-if="matches.length > 0" class="mt-4 d-flex flex-column align-center">
       <v-btn color="green darken-2" depressed dark large @click="savePrediction" :loading="saving">
@@ -194,6 +203,20 @@ export default class Predictor extends Vue {
     this.loadData();
   }
 
+  private formatKickoff(timeStr: string): string | undefined {
+    const kickoff = moment(timeStr, "DD.MM.YYYY HH:mm");
+    if (!kickoff.isValid()) {
+      return undefined;
+    }
+    if (kickoff.isSame(this.date, "day")) {
+      return kickoff.format("HH:mm");
+    }
+    if (kickoff.isSame(moment(this.date).add(1, "day"), "day")) {
+      return `After midnight, ${kickoff.format("HH:mm")}`;
+    }
+    return kickoff.format("D MMM, HH:mm");
+  }
+
   private loadData() {
     this.matches = [];
     this.loading = true;
@@ -205,9 +228,15 @@ export default class Predictor extends Vue {
         );
         worldCupData.forEach((l: any) => {
           l.matches.forEach((match: any) => {
-            this.matches.push(
-              new Match(match.home.name, match.away.name, match.status.started, match.home.score, match.away.score)
+            const m = new Match(
+              match.home.name,
+              match.away.name,
+              match.status.started,
+              match.home.score,
+              match.away.score
             );
+            m.kickoffLabel = this.formatKickoff(match.time);
+            this.matches.push(m);
           });
         });
         return this.loadPredictions().then(() => this.postResults(false));
@@ -335,6 +364,14 @@ export default class Predictor extends Vue {
   margin-bottom: 10px;
 }
 
+.kickoff-time {
+  font-size: 13px;
+  font-weight: 500;
+  color: #757575;
+  text-align: center;
+  margin: 0;
+}
+
 .match-row {
   flex-wrap: nowrap;
 }
@@ -422,5 +459,25 @@ export default class Predictor extends Vue {
   justify-content: space-between;
   font-size: 13px;
   padding: 3px 0;
+}
+
+.late-games-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #5f6368;
+  background: #fafafa;
+  border-left: 3px solid #c5cae9;
+  border-radius: 0 6px 6px 0;
+}
+
+.late-games-note__icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: #7986cb !important;
 }
 </style>

@@ -78,8 +78,9 @@ export default class Rankings extends Vue {
 
   private calculatePoints() {
     const map: Record<string, { username: string; matchesPredicted: number; points: number }> = {};
+
     this.predictions.forEach((prediction) => {
-      const score = calculateScore(prediction);
+      const score = calculateScore(prediction, this.predictions);
 
       if (prediction.username in map) {
         map[prediction.username].matchesPredicted += 1;

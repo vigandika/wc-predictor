@@ -6,6 +6,7 @@ export class Match {
     predHomeTeamScore: number | null;
     predAwayTeamScore: number | null;
     started: boolean;
+    kickoffLabel?: string;
 
     constructor(homeTeam: string, awayTeam: string, started: boolean, homeTeamScore: number, awayTeamScore: number, predHomeTeamScore?: number, predAwayTeamScore?: number) {
         this.homeTeam = homeTeam;

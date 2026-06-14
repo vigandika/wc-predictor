@@ -28,7 +28,7 @@
             <v-chip
               small
               class="points-chip"
-              :color="entry.points >= 4 ? 'green' : entry.points >= 2 ? 'orange' : 'grey'"
+              :color="entry.points >= 6 ? 'green' : entry.points >= 4 ? 'orange' : 'grey'"
               dark
             >
               {{ entry.points }} pts
@@ -102,7 +102,7 @@ export default class History extends Vue {
     const grouped: Record<string, MatchListItem> = {};
 
     this.predictions.forEach((prediction) => {
-      const points = calculateScore(prediction);
+      const points = calculateScore(prediction, this.predictions);
       const entry: HistoryEntry = {
         username: prediction.username,
         predictedHomeScore: prediction.predictedHomeScore,
