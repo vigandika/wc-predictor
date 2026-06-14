@@ -11,29 +11,49 @@
     <v-expansion-panels v-else accordion>
       <v-expansion-panel v-for="match in matchList" :key="match.id">
         <v-expansion-panel-header class="match-panel-header">
-          <div class="match-header">
+          <div v-if="match.isWcWinner" class="wc-winner-title">
+            World Cup Winner
+          </div>
+          <div v-else class="match-header">
             <span class="match-header__team">{{ match.homeTeam }}</span>
             <span class="match-header__score">{{ match.homeScore }} – {{ match.awayScore }}</span>
             <span class="match-header__team">{{ match.awayTeam }}</span>
           </div>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
-          <div
-            v-for="entry in match.entries"
-            :key="entry.username"
-            class="d-flex justify-space-between align-center py-1"
-          >
-            <span>{{ entry.username }}</span>
-            <span class="grey--text">{{ entry.predictedHomeScore }} – {{ entry.predictedAwayScore }}</span>
-            <v-chip
-              small
-              class="points-chip"
-              :color="entry.points >= 6 ? 'green' : entry.points >= 4 ? 'orange' : 'grey'"
-              dark
+          <template v-if="match.isWcWinner">
+            <p class="wc-winner-info mb-3">
+              20 pts will be added to the rankings at the end for everyone who correctly predicts the winner.
+            </p>
+            <div
+              v-for="entry in match.wcWinnerEntries"
+              :key="entry.username"
+              class="wc-winner-row"
             >
-              {{ entry.points }} pts
-            </v-chip>
-          </div>
+              <span>{{ entry.username }}</span>
+              <span :class="entry.pick ? 'wc-winner-pick' : 'wc-winner-missed'">
+                {{ entry.pick || "No prediction" }}
+              </span>
+            </div>
+          </template>
+          <template v-else>
+            <div
+              v-for="entry in match.entries"
+              :key="entry.username"
+              class="d-flex justify-space-between align-center py-1"
+            >
+              <span>{{ entry.username }}</span>
+              <span class="grey--text">{{ entry.predictedHomeScore }} – {{ entry.predictedAwayScore }}</span>
+              <v-chip
+                small
+                class="points-chip"
+                :color="entry.points >= 6 ? 'green' : entry.points >= 4 ? 'orange' : 'grey'"
+                dark
+              >
+                {{ entry.points }} pts
+              </v-chip>
+            </div>
+          </template>
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -49,6 +69,37 @@ import { Component, Vue } from "vue-property-decorator";
 import calculateScore from "@/helper/scoreHelper";
 import axios from "axios";
 
+const ALL_USERS = [
+  "jona",
+  "vigan",
+  "asdren",
+  // "andi",
+  // "ardian",
+  "dard",
+  "diart",
+  "dielli",
+  "hana",
+  "ilir",
+  // "joni",
+  // "kastri",
+  // "laid",
+  // "ardita",
+  "moza",
+  "myrteza",
+  // "rozi",
+  "artan",
+];
+
+const WC_WINNER_PICKS: Record<string, string> = {
+  dielli: "France",
+  diart: "France",
+  dard: "France",
+  moza: "Spain",
+  asdren: "Portugal",
+  vigan: "Portugal",
+  myrteza: "Germany",
+};
+
 type HistoryEntry = {
   username: string;
   predictedHomeScore: number;
@@ -56,13 +107,20 @@ type HistoryEntry = {
   points: number;
 };
 
+type WcWinnerEntry = {
+  username: string;
+  pick: string | null;
+};
+
 type MatchListItem = {
   id: string;
+  isWcWinner?: boolean;
   homeTeam: string;
   awayTeam: string;
   homeScore: number;
   awayScore: number;
   entries: HistoryEntry[];
+  wcWinnerEntries?: WcWinnerEntry[];
 };
 
 @Component({})
@@ -75,6 +133,31 @@ export default class History extends Vue {
 
   mounted() {
     this.fetchHistory();
+  }
+
+  private buildWcWinnerEntry(): MatchListItem {
+    const wcWinnerEntries = ALL_USERS.map((username) => ({
+      username,
+      pick: WC_WINNER_PICKS[username] ?? null,
+    })).sort((a, b) => {
+      const aHas = a.pick ? 0 : 1;
+      const bHas = b.pick ? 0 : 1;
+      if (aHas !== bHas) {
+        return aHas - bHas;
+      }
+      return a.username.localeCompare(b.username);
+    });
+
+    return {
+      id: "wc-winner",
+      isWcWinner: true,
+      homeTeam: "",
+      awayTeam: "",
+      homeScore: 0,
+      awayScore: 0,
+      entries: [],
+      wcWinnerEntries,
+    };
   }
 
   private fetchHistory() {
@@ -124,10 +207,12 @@ export default class History extends Vue {
       }
     });
 
-    this.matchList = Object.values(grouped).map((match) => ({
+    const matches = Object.values(grouped).map((match) => ({
       ...match,
       entries: match.entries.sort((a, b) => b.points - a.points),
     }));
+
+    this.matchList = [this.buildWcWinnerEntry(), ...matches];
   }
 }
 </script>
@@ -135,6 +220,38 @@ export default class History extends Vue {
 <style scoped>
 .match-panel-header >>> .v-expansion-panel-header__icon {
   margin-left: 8px;
+}
+
+.wc-winner-title {
+  width: 100%;
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+  color: #b8860b;
+}
+
+.wc-winner-info {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.wc-winner-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.wc-winner-pick {
+  font-weight: 600;
+  color: #b8860b;
+}
+
+.wc-winner-missed {
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.38);
 }
 
 .match-header {
