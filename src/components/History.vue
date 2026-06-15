@@ -73,7 +73,7 @@ const ALL_USERS = [
   "jona",
   "vigan",
   "asdren",
-  // "andi",
+  "andi",
   "ardian",
   "dard",
   "diart",
@@ -101,6 +101,7 @@ const WC_WINNER_PICKS: Record<string, string> = {
   myrteza: "Germany",
   ilir: 'Argentina',
   hana: 'Spain',
+  artan: 'Germany',
 };
 
 type HistoryEntry = {

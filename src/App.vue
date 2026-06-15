@@ -69,7 +69,7 @@ export default class App extends Vue {
         "jona",
         "vigan",
         "asdren",
-        // "andi",
+        "andi",
         "ardian",
         "dard",
         "diart",
