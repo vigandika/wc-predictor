@@ -93,11 +93,14 @@ const ALL_USERS = [
 const WC_WINNER_PICKS: Record<string, string> = {
   dielli: "France",
   diart: "France",
+  ardian: "France",
   dard: "France",
   moza: "Spain",
   asdren: "Portugal",
   vigan: "Portugal",
   myrteza: "Germany",
+  ilir: 'Argentina',
+  hana: 'Spain',
 };
 
 type HistoryEntry = {
